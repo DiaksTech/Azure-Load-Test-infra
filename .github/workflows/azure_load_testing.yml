@@ -65,6 +65,6 @@ jobs:
     # Terraform Destroy
     # ==================================
     - name: 'Terraform Destroy'
-      id: detroy
-      run: terraform detroy
+      id: destroy
+      run: terraform destroy -auto-approve
       working-directory: terraform/
