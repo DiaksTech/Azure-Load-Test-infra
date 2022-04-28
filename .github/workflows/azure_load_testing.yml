@@ -1,28 +1,70 @@
-name: 'Test SPN login'
-
+name: 'Azure Load Test JMeter Infra'
 on: push
-
-
 jobs:
-  azure_load_test:
+  #====================================================================================================================================
+  # Terraform 
+  #====================================================================================================================================
+  terraform:
+    name: 'Terraform Build & Deploy'
+    runs-on: ubuntu-latest  
     env:
-      AZURE_AD_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
-      AZURE_AD_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      AZURE_AD_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
-    
-    runs-on: ubuntu-latest
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+    defaults:
+      run:
+        shell: bash
     steps:
-
+    #==================================
+    # Setup Terraform
+    #================================== 
+    - name: Setup Terraform
+      id: setup
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 0.14.4  
+        terraform_wrapper: false
     #==================================
     # Checkout Repository
     #================================== 
-    - name: Checkout GitHub Actions 
+    - name: checkout repo
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.ref }}
+    #==================================
+    # Terraform Init
+    #==================================  
+    - name: 'Terraform Init'
+      id: init
+      run: terraform init
+      working-directory: terraform/
+    #==================================
+    # Terraform Validate
+    #================================== 
+    - name: 'Terraform Validate'
+      id: validate
+      run: terraform validate
+      working-directory: terraform/
+    #==================================
+    # Terraform Plan
+    #================================== 
+    - name: 'Terraform Plan'
+      id: plan
+      run: terraform plan
+      working-directory: terraform/
+    #==================================
+    # Terraform Apply
+    #==================================
+    - name: 'Terraform Aply'
+      id: apply
+      run: terraform apply -auto-approve
+      working-directory: terraform/
 
     #==================================
-    # Setup Az Login
-    #================================== 
-    - name: Setup az login
-      run: |
-        az login --service-principal -u ${{ secrets.AZURE_AD_CLIENT_ID }} -p ${{ secrets.AZURE_AD_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_AD_TENANT_ID }}
+    # Terraform Destroy
+    #==================================
+    # - name: 'Terraform Destroy'
+    #   id: detroy
+    #   run: terraform detroy -auto-approve
+    #   working-directory: terraform/
