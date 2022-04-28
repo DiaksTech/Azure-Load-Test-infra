@@ -39,32 +39,32 @@ jobs:
       id: init
       run: terraform init
       working-directory: terraform/
-    #==================================
-    # Terraform Validate
-    #================================== 
-    - name: 'Terraform Validate'
-      id: validate
-      run: terraform validate
-      working-directory: terraform/
-    #==================================
-    # Terraform Plan
-    #================================== 
-    - name: 'Terraform Plan'
-      id: plan
-      run: terraform plan
-      working-directory: terraform/
-    #==================================
-    # Terraform Apply
-    #==================================
-    - name: 'Terraform Aply'
-      id: apply
-      run: terraform apply -auto-approve
-      working-directory: terraform/
-
-    #==================================
-    # Terraform Destroy
-    #==================================
-    # - name: 'Terraform Destroy'
-    #   id: detroy
-    #   run: terraform detroy -auto-approve
+    # #==================================
+    # # Terraform Validate
+    # #================================== 
+    # - name: 'Terraform Validate'
+    #   id: validate
+    #   run: terraform validate
     #   working-directory: terraform/
+    # #==================================
+    # # Terraform Plan
+    # #================================== 
+    # - name: 'Terraform Plan'
+    #   id: plan
+    #   run: terraform plan
+    #   working-directory: terraform/
+    # #==================================
+    # # Terraform Apply
+    # #==================================
+    # - name: 'Terraform Aply'
+    #   id: apply
+    #   run: terraform apply -auto-approve
+    #   working-directory: terraform/
+
+    # ==================================
+    # Terraform Destroy
+    # ==================================
+    - name: 'Terraform Destroy'
+      id: detroy
+      run: terraform detroy -auto-approve
+      working-directory: terraform/
